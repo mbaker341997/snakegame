@@ -28,7 +28,7 @@ public class FoodDot {
 	
 	//draw method draws the snake
 	public void draw(Graphics page){
-		page.setColor(Color.RED);
+		page.setColor(Color.YELLOW);
 		page.fillRect(x, y, 10, 10);
 	}
 	

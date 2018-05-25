@@ -16,6 +16,7 @@ public class GamePanel extends JPanel{
 	private int score, xpos, ypos;
 	private Snake snek;
 	private FoodDot dot;
+	private boolean gameOver;
 	
 	public GamePanel() {
 		//snake start position
@@ -26,6 +27,7 @@ public class GamePanel extends JPanel{
 		
 		//score info
 		score = 0;
+		gameOver = false;
 		
 		canvas = new CanvasPanel();	
 		addKeyListener(new ArrowListener());
@@ -55,6 +57,13 @@ public class GamePanel extends JPanel{
 			
 			//draw the dot
 			dot.draw(page);
+			
+			//show it game over if it is
+			if(gameOver){
+				page.setFont(new Font(Font.SERIF, Font.BOLD, 50));
+				page.setColor(Color.RED);
+				page.drawString("GAME OVER", 145, 250);
+			}
 		}
 	}
 	
@@ -69,29 +78,38 @@ public class GamePanel extends JPanel{
 
 		@Override
 		public void keyPressed(KeyEvent key) {
-			if(key.getKeyCode() == KeyEvent.VK_UP){
-				if(ypos > 40){
-					ypos-=10;
+			if(!gameOver){
+				if(key.getKeyCode() == KeyEvent.VK_UP){
+					if(ypos > 40)
+						ypos-=10;
+					else
+						gameOver = true;
 				}
+				else if(key.getKeyCode() == KeyEvent.VK_DOWN){
+					if(ypos < 530)
+						ypos+=10;
+					else
+						gameOver = true;
+				}
+				else if(key.getKeyCode() == KeyEvent.VK_LEFT){
+					if(xpos > 40)
+						xpos-=10;
+					else
+						gameOver = true;
+				}
+				else if(key.getKeyCode() == KeyEvent.VK_RIGHT){
+					if(xpos < 530)
+						xpos+=10;
+					else
+						gameOver = true;
+				}
+				snek.setCoords(xpos, ypos);
+				if(hasEaten()){
+					score++;
+					dot.changePos(xpos, ypos);
+				}
+				repaint();
 			}
-			else if(key.getKeyCode() == KeyEvent.VK_DOWN){
-				if(ypos < 530)
-					ypos+=10;
-			}
-			else if(key.getKeyCode() == KeyEvent.VK_LEFT){
-				if(xpos > 40)
-					xpos-=10;
-			}
-			else if(key.getKeyCode() == KeyEvent.VK_RIGHT){
-				if(xpos < 530)
-					xpos+=10;
-			}
-			snek.setCoords(xpos, ypos);
-			if(hasEaten()){
-				score++;
-				dot.changePos(xpos, ypos);
-			}
-			repaint();
 
 		}
 

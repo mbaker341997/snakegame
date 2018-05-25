@@ -4,12 +4,11 @@ import java.awt.Graphics;
 //the actual Snake Object
 public class Snake {
 
-	private int x, y, length;
+	private int x, y;
 	
 	public Snake(int x, int y) {
 		this.x = x;
 		this.y = y;
-		length = 1;
 	}
 	
 	public void setCoords(int xpos, int ypos){

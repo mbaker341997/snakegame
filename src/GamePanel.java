@@ -24,20 +24,7 @@ public class GamePanel extends JPanel{
 	public int direction;
 	
 	public GamePanel() {
-		//snake start position
-		xpos = 290;
-		ypos = 290;
-		snek = new Snake(xpos, ypos);
-		dot = new FoodDot(xpos + 50, ypos);
-		direction = -1;//default direction, this is probably horrible practice
-		
-		//score info
-		score = 0;
-		gameOver = false;
-		
-		//set up timer
-		gameStart = false;
-		timer = new Timer(50, new TimerListener());
+		setup();
 		
 		//set up the key listener
 		canvas = new CanvasPanel();	
@@ -48,6 +35,24 @@ public class GamePanel extends JPanel{
 		//put it all together
 		setLayout(new BorderLayout());
 		add(canvas, BorderLayout.CENTER);
+	}
+	
+	//initial settings
+	public void setup(){
+		//snake start position
+		xpos = 290;
+		ypos = 290;
+		snek = new Snake(xpos, ypos);
+		dot = new FoodDot(xpos + 50, ypos);
+		direction = -1;//default direction, this is probably horrible practice
+				
+		//score info
+		score = 0;
+		gameOver = false;
+				
+		//set up timer
+		gameStart = false;
+		timer = new Timer(60, new TimerListener());
 	}
 	
 	//panel where everything will show up
@@ -114,20 +119,7 @@ public class GamePanel extends JPanel{
 			}
 			//if the game's over and you press space, restart
 			else if(key.getKeyCode() == KeyEvent.VK_SPACE){
-				//snake start position
-				xpos = 290;
-				ypos = 290;
-				snek = new Snake(xpos, ypos);
-				dot = new FoodDot(xpos + 50, ypos);
-				
-				//score info
-				score = 0;
-				gameOver = false;
-				
-				//set up timer
-				gameStart = false;
-				timer = new Timer(50, new TimerListener());
-				
+				setup();				
 				repaint();
 			}
 

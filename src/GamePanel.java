@@ -96,18 +96,18 @@ public class GamePanel extends JPanel{
 
 		@Override
 		public void keyPressed(KeyEvent key) {
-			if(!gameOver){
+			if(!gameOver){				
 				//change the snake's direction
-				if(key.getKeyCode() == KeyEvent.VK_UP && (direction != DOWN || snek.getLength() == 1)){					
+				if(key.getKeyCode() == KeyEvent.VK_UP && (direction != DOWN || snek.getTailLength() == 0)){					
 					direction = UP;
 				}
-				else if(key.getKeyCode() == KeyEvent.VK_DOWN && (direction != UP || snek.getLength() == 1)){
+				else if(key.getKeyCode() == KeyEvent.VK_DOWN && (direction != UP || snek.getTailLength() == 0)){
 					direction = DOWN;
 				}
-				else if(key.getKeyCode() == KeyEvent.VK_LEFT && (direction != RIGHT || snek.getLength() == 1)){
+				else if(key.getKeyCode() == KeyEvent.VK_LEFT && (direction != RIGHT || snek.getTailLength() == 0)){
 					direction = LEFT;
 				}
-				else if(key.getKeyCode() == KeyEvent.VK_RIGHT && (direction != LEFT || snek.getLength() == 1)){
+				else if(key.getKeyCode() == KeyEvent.VK_RIGHT && (direction != LEFT || snek.getTailLength() == 0)){
 					direction = RIGHT;
 				}
 				
@@ -142,6 +142,10 @@ public class GamePanel extends JPanel{
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			//change snake's makeup
+			snek.addToTail(xpos, ypos);	
+			snek.chopOffEnd();
+			
 			//move the snake
 			if(direction == UP){					
 				if(ypos > 40)
@@ -173,8 +177,9 @@ public class GamePanel extends JPanel{
 			if(gameOver)
 				timer.stop();
 			
-			//move the dot if it has been eaten
+			//move the dot if it has been eaten and increase length of snake
 			if(hasEaten()){
+				snek.addToTail(xpos, ypos);	
 				score++;
 				dot.changePos(xpos, ypos);
 			}

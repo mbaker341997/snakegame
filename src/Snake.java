@@ -1,15 +1,18 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.util.ArrayList;
 
 //the actual Snake Object
 public class Snake {
 
-	private int x, y, length;
+	private int x, y;
+	private ArrayList<Point> tail;
 	
 	public Snake(int x, int y) {
 		this.x = x;
 		this.y = y;
-		length = 1;
+		tail = new ArrayList<Point>();
 	}
 	
 	public void setCoords(int xpos, int ypos){
@@ -21,6 +24,9 @@ public class Snake {
 	public void draw(Graphics page){
 		page.setColor(Color.WHITE);
 		page.fillRect(x, y, 10, 10);
+		for(int i = 0; i < tail.size(); i++){
+			page.fillRect(tail.get(i).x, tail.get(i).y, 10, 10);
+		}
 	}
 	
 	public int getX(){
@@ -31,9 +37,16 @@ public class Snake {
 		return y;
 	}
 	
-	public int getLength(){
-		return length;
+	public int getTailLength(){
+		return tail.size();
 	}
 	
+	public void addToTail(int x, int y){
+		tail.add(new Point(x, y));
+	}
+	
+	public void chopOffEnd(){
+		tail.remove(0);
+	}
 
 }

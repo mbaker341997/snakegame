@@ -98,16 +98,16 @@ public class GamePanel extends JPanel{
 		public void keyPressed(KeyEvent key) {
 			if(!gameOver){
 				//change the snake's direction
-				if(key.getKeyCode() == KeyEvent.VK_UP && direction != DOWN){					
+				if(key.getKeyCode() == KeyEvent.VK_UP && (direction != DOWN || snek.getLength() == 1)){					
 					direction = UP;
 				}
-				else if(key.getKeyCode() == KeyEvent.VK_DOWN && direction != UP){
+				else if(key.getKeyCode() == KeyEvent.VK_DOWN && (direction != UP || snek.getLength() == 1)){
 					direction = DOWN;
 				}
-				else if(key.getKeyCode() == KeyEvent.VK_LEFT && direction != RIGHT){
+				else if(key.getKeyCode() == KeyEvent.VK_LEFT && (direction != RIGHT || snek.getLength() == 1)){
 					direction = LEFT;
 				}
-				else if(key.getKeyCode() == KeyEvent.VK_RIGHT && direction != LEFT){
+				else if(key.getKeyCode() == KeyEvent.VK_RIGHT && (direction != LEFT || snek.getLength() == 1)){
 					direction = RIGHT;
 				}
 				

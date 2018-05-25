@@ -14,11 +14,15 @@ public class GamePanel extends JPanel{
 
 	private CanvasPanel canvas;
 	private int score, xpos, ypos;
+	private Snake snek;
+	private FoodDot dot;
 	
 	public GamePanel() {
 		//snake start position
-		xpos = 295;
-		ypos = 295;
+		xpos = 290;
+		ypos = 290;
+		snek = new Snake(xpos, ypos);
+		dot = new FoodDot(xpos + 50, ypos);
 		
 		//score info
 		score = 0;
@@ -41,14 +45,24 @@ public class GamePanel extends JPanel{
 			//set score label
 			page.setFont(new Font(Font.SERIF, Font.BOLD, 25));
 			page.setColor(Color.WHITE);
-			page.drawString("Score: " + ypos, 40, 25);
+			page.drawString("Score: " + score, 40, 25);
 			
 			//bounds
 			page.drawRect(40, 40, 500, 500);
 			
-			Snake snek = new Snake(xpos, ypos);
+			//draw the snake
 			snek.draw(page);
+			
+			//draw the dot
+			dot.draw(page);
 		}
+	}
+	
+	public boolean hasEaten(){
+		if(dot.getX() == snek.getX() && dot.getY() == snek.getY())
+			return true;
+		else
+			return false;
 	}
 	
 	private class ArrowListener implements KeyListener{
@@ -56,25 +70,29 @@ public class GamePanel extends JPanel{
 		@Override
 		public void keyPressed(KeyEvent key) {
 			if(key.getKeyCode() == KeyEvent.VK_UP){
-				if(ypos > 40)
-					ypos-=5;
-				repaint();
+				if(ypos > 40){
+					ypos-=10;
+				}
 			}
 			else if(key.getKeyCode() == KeyEvent.VK_DOWN){
 				if(ypos < 530)
-					ypos+=5;
-				repaint();
+					ypos+=10;
 			}
 			else if(key.getKeyCode() == KeyEvent.VK_LEFT){
 				if(xpos > 40)
-					xpos-=5;
-				repaint();
+					xpos-=10;
 			}
 			else if(key.getKeyCode() == KeyEvent.VK_RIGHT){
 				if(xpos < 530)
-					xpos+=5;
-				repaint();
+					xpos+=10;
 			}
+			snek.setCoords(xpos, ypos);
+			if(hasEaten()){
+				score++;
+				dot.changePos(xpos, ypos);
+			}
+			repaint();
+
 		}
 
 		@Override

@@ -110,22 +110,22 @@ public class GamePanel extends JPanel{
 		public void keyPressed(KeyEvent key) {
 			if(!gameOver && !makingMove){				
 				//change the snake's direction
-				if(key.getKeyCode() == KeyEvent.VK_UP && (direction != DOWN || snek.getTailLength() == 0)){	
+				if(key.getKeyCode() == KeyEvent.VK_UP && ((direction != DOWN && direction != UP)|| snek.getTailLength() == 0)){	
 					System.out.println("up");
 					direction = UP;
 					makingMove = true;
 				}
-				else if(key.getKeyCode() == KeyEvent.VK_DOWN && (direction != UP || snek.getTailLength() == 0)){
+				else if(key.getKeyCode() == KeyEvent.VK_DOWN && ((direction != DOWN && direction != UP) || snek.getTailLength() == 0)){
 					System.out.println("down");
 					direction = DOWN;
 					makingMove = true;
 				}
-				else if(key.getKeyCode() == KeyEvent.VK_LEFT && (direction != RIGHT || snek.getTailLength() == 0)){
+				else if(key.getKeyCode() == KeyEvent.VK_LEFT && ((direction != RIGHT && direction != LEFT) || snek.getTailLength() == 0)){
 					System.out.println("left");
 					direction = LEFT;
 					makingMove = true;
 				}
-				else if(key.getKeyCode() == KeyEvent.VK_RIGHT && (direction != LEFT || snek.getTailLength() == 0)){
+				else if(key.getKeyCode() == KeyEvent.VK_RIGHT && ((direction != RIGHT && direction != LEFT) || snek.getTailLength() == 0)){
 					System.out.println("right");
 					direction = RIGHT;
 					makingMove = true;

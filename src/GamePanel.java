@@ -22,9 +22,16 @@ public class GamePanel extends JPanel{
 	private Timer timer;
 	public static final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
 	public int direction;
+	private boolean robotMode;
 	
-	public GamePanel() {
+	public GamePanel(int choice) {
 		setup();
+		
+		//check if it's robot mode
+		if(choice == 0)
+			robotMode = false;
+		else
+			robotMode = true;
 		
 		//set up the key listener
 		canvas = new CanvasPanel();	
@@ -67,6 +74,10 @@ public class GamePanel extends JPanel{
 			page.setFont(new Font(Font.SERIF, Font.BOLD, 25));
 			page.setColor(Color.WHITE);
 			page.drawString("Score: " + score, 40, 30);
+			
+			//robot mode label
+			if(robotMode)
+				page.drawString("Robot Mode", 235, 30);
 			
 			//bounds
 			page.drawRect(40, 40, 500, 500);

@@ -196,12 +196,6 @@ public class GamePanel extends JPanel{
 			if(gameOver)
 				timer.stop();
 			
-			//move the dot if it has been eaten and increase length of snake
-			/*if(hasEaten()){
-				snek.addToTail(xpos, ypos);	
-				score++;
-				dot.changePos(xpos, ypos, snek.getTail());
-			}*/
 			
 			makingMove = false;
 			//repaint 

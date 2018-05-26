@@ -1,5 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Random;
 
 //the thing we want the snake to eat
@@ -12,7 +14,7 @@ public class FoodDot {
 		this.y = y;
 	}
 	
-	public void changePos(int notX, int notY){
+	public void changePos(int notX, int notY, ArrayList<Point> tail){
 		boolean success = false;
 		do{
 			int newX = (new Random().nextInt(53 - 4) + 4) * 10;
@@ -23,6 +25,12 @@ public class FoodDot {
 				y = newY;
 				success = true;
 			}
+			
+			for(Point p : tail){
+				if(newX == p.getX() && newY == p.getY())
+					success = false;
+			}
+			
 		}while(!success);
 	}
 	

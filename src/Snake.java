@@ -29,12 +29,25 @@ public class Snake {
 		}
 	}
 	
+	//check if it touched itself (hehe)
+	public boolean touchedSelf(){
+		for(Point p : tail){
+			if(p.getX() == x && p.getY() == y)
+				return true;
+		}
+		return false;
+	}
+	
 	public int getX(){
 		return x;
 	}
 	
 	public int getY(){
 		return y;
+	}
+	
+	public ArrayList<Point> getTail(){
+		return tail;
 	}
 	
 	public int getTailLength(){

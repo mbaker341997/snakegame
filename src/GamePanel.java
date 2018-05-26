@@ -18,7 +18,7 @@ public class GamePanel extends JPanel{
 	private int score, xpos, ypos;
 	private Snake snek;
 	private FoodDot dot;
-	private boolean gameStart, gameOver;
+	private boolean gameStart, gameOver, makingMove;
 	private Timer timer;
 	public static final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
 	public int direction;
@@ -45,6 +45,7 @@ public class GamePanel extends JPanel{
 		snek = new Snake(xpos, ypos);
 		dot = new FoodDot(xpos + 50, ypos);
 		direction = -1;//default direction, this is probably horrible practice
+		makingMove = false;
 				
 		//score info
 		score = 0;
@@ -96,19 +97,27 @@ public class GamePanel extends JPanel{
 
 		@Override
 		public void keyPressed(KeyEvent key) {
-			if(!gameOver){				
+			if(!gameOver && !makingMove){				
 				//change the snake's direction
-				if(key.getKeyCode() == KeyEvent.VK_UP && (direction != DOWN || snek.getTailLength() == 0)){					
+				if(key.getKeyCode() == KeyEvent.VK_UP && (direction != DOWN || snek.getTailLength() == 0)){	
+					System.out.println("up");
 					direction = UP;
+					makingMove = true;
 				}
 				else if(key.getKeyCode() == KeyEvent.VK_DOWN && (direction != UP || snek.getTailLength() == 0)){
+					System.out.println("down");
 					direction = DOWN;
+					makingMove = true;
 				}
 				else if(key.getKeyCode() == KeyEvent.VK_LEFT && (direction != RIGHT || snek.getTailLength() == 0)){
+					System.out.println("left");
 					direction = LEFT;
+					makingMove = true;
 				}
 				else if(key.getKeyCode() == KeyEvent.VK_RIGHT && (direction != LEFT || snek.getTailLength() == 0)){
+					System.out.println("right");
 					direction = RIGHT;
+					makingMove = true;
 				}
 				
 				//start the timer if the game has begun yet
@@ -144,7 +153,6 @@ public class GamePanel extends JPanel{
 		public void actionPerformed(ActionEvent arg0) {
 			//change snake's makeup
 			snek.addToTail(xpos, ypos);	
-			snek.chopOffEnd();
 			
 			//move the snake
 			if(direction == UP){					
@@ -171,19 +179,31 @@ public class GamePanel extends JPanel{
 				else
 					gameOver = true;
 			}
-			snek.setCoords(xpos, ypos);	
+			snek.setCoords(xpos, ypos);
+			
+			if(snek.touchedSelf())
+				gameOver = true;
+			
+			//if the snake has eaten, then move the dot and don't chop off end
+			if(hasEaten()){
+				score++;
+				dot.changePos(xpos, ypos, snek.getTail());
+			}
+			else
+				snek.chopOffEnd();
 
 			//stop the timer if gameOver
 			if(gameOver)
 				timer.stop();
 			
 			//move the dot if it has been eaten and increase length of snake
-			if(hasEaten()){
+			/*if(hasEaten()){
 				snek.addToTail(xpos, ypos);	
 				score++;
-				dot.changePos(xpos, ypos);
-			}
+				dot.changePos(xpos, ypos, snek.getTail());
+			}*/
 			
+			makingMove = false;
 			//repaint 
 			repaint();
 		}

@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -28,10 +29,10 @@ public class GamePanel extends JPanel{
 		setup();
 		
 		//check if it's robot mode
-		if(choice == 0)
-			robotMode = false;
-		else
+		if(choice == 1)
 			robotMode = true;
+		else
+			robotMode = false;
 		
 		//set up the key listener
 		canvas = new CanvasPanel();	
@@ -51,7 +52,7 @@ public class GamePanel extends JPanel{
 		ypos = 290;
 		snek = new Snake(xpos, ypos);
 		dot = new FoodDot(xpos + 50, ypos);
-		direction = -1;//default direction, this is probably horrible practice
+		direction = 3;//default move right cuz it's obvious
 		makingMove = false;
 				
 		//score info
@@ -104,29 +105,47 @@ public class GamePanel extends JPanel{
 			return false;
 	}
 	
+	public Point getFoodDotLoc(){
+		Point p = new Point(dot.getX(), dot.getY());
+		return p;
+	}
+	
+	public Point getSnekHeadLoc(){
+		Point p = new Point(xpos, ypos);
+		return p;
+	}
+	
+	public int getDirection(){
+		return direction;
+	}
+	
+	public boolean isGameOver(){
+		return gameOver;
+	}
+	
 	private class ArrowListener implements KeyListener{
 
 		@Override
-		public void keyPressed(KeyEvent key) {
-			if(!gameOver && !makingMove){				
+		public void keyPressed(KeyEvent key) {			
+			if(!gameOver && !makingMove){	
 				//change the snake's direction
 				if(key.getKeyCode() == KeyEvent.VK_UP && ((direction != DOWN && direction != UP)|| snek.getTailLength() == 0)){	
-					System.out.println("up");
+					//System.out.println("up");
 					direction = UP;
 					makingMove = true;
 				}
 				else if(key.getKeyCode() == KeyEvent.VK_DOWN && ((direction != DOWN && direction != UP) || snek.getTailLength() == 0)){
-					System.out.println("down");
+					//System.out.println("down");
 					direction = DOWN;
 					makingMove = true;
 				}
 				else if(key.getKeyCode() == KeyEvent.VK_LEFT && ((direction != RIGHT && direction != LEFT) || snek.getTailLength() == 0)){
-					System.out.println("left");
+					//System.out.println("left");
 					direction = LEFT;
 					makingMove = true;
 				}
 				else if(key.getKeyCode() == KeyEvent.VK_RIGHT && ((direction != RIGHT && direction != LEFT) || snek.getTailLength() == 0)){
-					System.out.println("right");
+					//System.out.println("right");
 					direction = RIGHT;
 					makingMove = true;
 				}
@@ -169,26 +188,18 @@ public class GamePanel extends JPanel{
 			if(direction == UP){					
 				if(ypos > 40)
 					ypos-=10;
-				else
-					gameOver = true;
 			}
 			else if(direction == DOWN){
 				if(ypos < 530)
 					ypos+=10;
-				else
-					gameOver = true;
 			}
 			else if(direction == LEFT){
 				if(xpos > 40)
 					xpos-=10;
-				else
-					gameOver = true;
 			}
 			else if(direction == RIGHT){
 				if(xpos < 530)
 					xpos+=10;
-				else
-					gameOver = true;
 			}
 			snek.setCoords(xpos, ypos);
 			

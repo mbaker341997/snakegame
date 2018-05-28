@@ -28,7 +28,7 @@ public class SnakeGame {
 		window.setVisible(true);
 		
 		if(choice == 1){
-			SnakeBot bot = new SnakeBot();
+			SnakeBot bot = new SnakeBot(gp);
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {

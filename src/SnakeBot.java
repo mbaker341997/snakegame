@@ -22,8 +22,18 @@ public class SnakeBot {
 	
 	public void solveGame()
 	{
-		System.out.println(getDistToDot(gp.getSnekHeadLoc()));		
-		bot.keyPress(KeyEvent.VK_RIGHT);
+		while(!gp.isGameOver())
+		{
+			//if moving right gets you closest to the dot then move right
+			if(getDistToDot(simRightMove()) <= getDistToDot(simLeftMove()) && getDistToDot(simRightMove()) <= getDistToDot(simStraight()))
+				moveRight();
+			//if moving left gets you closest to the dot then move left
+			else if(getDistToDot(simLeftMove()) <= getDistToDot(simRightMove()) && getDistToDot(simLeftMove()) <= getDistToDot(simStraight()))
+				moveLeft();
+			//otherwise just keep going straight
+			else
+				stayStraight();
+		}
 	}
 
 	public double getDistToDot(Point p){
@@ -59,11 +69,20 @@ public class SnakeBot {
 	
 	//from the POV of the snake head
 	public void stayStraight(){
-		try {
+		int dir = gp.getDirection();
+		if(dir == UP)
+			bot.keyPress(KeyEvent.VK_UP);
+		else if(dir == DOWN)
+			bot.keyPress(KeyEvent.VK_DOWN);
+		else if(dir == LEFT)
+			bot.keyPress(KeyEvent.VK_LEFT);
+		else if(dir == RIGHT)
+			bot.keyPress(KeyEvent.VK_RIGHT);
+		/*try {
 			bot.wait(WAIT);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	//from the POV of the snake head
@@ -109,5 +128,9 @@ public class SnakeBot {
 		else if(dir == RIGHT)
 			p.setLocation(p.getX()+10, p.getY());
 		return p;
+	}
+	
+	public void printPoint(Point p){
+		System.out.println("(" + p.getX() + ", " + p.getY() + ")");
 	}
 }

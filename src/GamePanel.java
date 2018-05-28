@@ -52,7 +52,7 @@ public class GamePanel extends JPanel{
 		ypos = 290;
 		snek = new Snake(xpos, ypos);
 		dot = new FoodDot(xpos + 50, ypos);
-		direction = 3;//default move right cuz it's obvious
+		direction = 0;
 		makingMove = false;
 				
 		//score info

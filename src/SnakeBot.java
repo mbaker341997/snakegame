@@ -24,6 +24,14 @@ public class SnakeBot {
 	{
 		while(!gp.isGameOver())
 		{
+			/*System.out.print("I'm at "); 
+			printPoint(gp.getSnekHeadLoc());
+			System.out.print("Food's at ");
+			printPoint(gp.getFoodDotLoc());
+			System.out.println("Distance if I go right: " + getDistToDot(simRightMove()));
+			System.out.println("Distance if I go left: " + getDistToDot(simLeftMove()));
+			System.out.println("Distance if I stay straight: " + getDistToDot(simStraight()));*/
+			
 			//if moving right gets you closest to the dot then move right
 			if(getDistToDot(simRightMove()) <= getDistToDot(simLeftMove()) && getDistToDot(simRightMove()) <= getDistToDot(simStraight()))
 				moveRight();
@@ -36,13 +44,15 @@ public class SnakeBot {
 		}
 	}
 
+	//manhattan distance
 	public double getDistToDot(Point p){
 		Point foodLoc = gp.getFoodDotLoc();
-		return Point.distance(p.getX(), p.getY(), foodLoc.getX(), foodLoc.getY());
+		return Math.abs(p.getX() - foodLoc.getX()) + Math.abs(p.getY() - foodLoc.getY());	
 	}
 	
 	//from the POV of the snake head
 	public void moveLeft(){
+		System.out.println("moving left");
 		int dir = gp.getDirection();
 		if(dir == UP)
 			bot.keyPress(KeyEvent.VK_LEFT);
@@ -56,6 +66,7 @@ public class SnakeBot {
 	
 	//from the POV of the snake head
 	public void moveRight(){
+		System.out.println("moving right");
 		int dir = gp.getDirection();
 		if(dir == UP)
 			bot.keyPress(KeyEvent.VK_RIGHT);
@@ -69,6 +80,7 @@ public class SnakeBot {
 	
 	//from the POV of the snake head
 	public void stayStraight(){
+		System.out.println("Staying straight");
 		int dir = gp.getDirection();
 		if(dir == UP)
 			bot.keyPress(KeyEvent.VK_UP);

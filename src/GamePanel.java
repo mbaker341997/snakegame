@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -121,6 +122,11 @@ public class GamePanel extends JPanel{
 	
 	public boolean isGameOver(){
 		return gameOver;
+	}
+	
+	public boolean isSnekPoint(Point p){
+		ArrayList<Point> snekPoints = snek.getTail();
+		return snekPoints.contains(p);
 	}
 	
 	private class ArrowListener implements KeyListener{

@@ -8,7 +8,7 @@ public class SnakeBot {
 	private Robot bot;
 	private GamePanel gp;
 	public static final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
-	public static final int WAIT = 100;
+	public static final int WAIT = 0;
 	
 	public SnakeBot(GamePanel gp) {
 		this.gp = gp;
@@ -22,26 +22,58 @@ public class SnakeBot {
 	
 	public void solveGame()
 	{
+		Point atP = new Point(290, 290);
+		Point nextP = new Point(300, 290);
+		double rightValue = 0;
+		double leftValue = 0;
+		double straightValue = 0;
+		String lastMove = "right";
+		int lastDir = 0;
 		while(!gp.isGameOver())
 		{
-			/*System.out.print("I'm at "); 
-			printPoint(gp.getSnekHeadLoc());
-			System.out.print("Food's at ");
-			printPoint(gp.getFoodDotLoc());
-			System.out.println("Distance if I go right: " + getDistToDot(simRightMove()));
-			System.out.println("Distance if I go left: " + getDistToDot(simLeftMove()));
-			System.out.println("Distance if I stay straight: " + getDistToDot(simStraight()));*/
+			atP = gp.getSnekHeadLoc();
+			lastDir = gp.getDirection();
+			/*printPoint(gp.getSnekHeadLoc());
+			System.out.print("If I go right: ");
+			printPoint(simRightMove());
+			System.out.print("If I go left: ");
+			printPoint(simLeftMove());
+			System.out.print("If I stay straight: ");
+			printPoint(simStraight());
+			System.out.println("Value of going right: " + valueFunc(simRightMove()));
+			System.out.println("Value of going left: " + valueFunc(simLeftMove()));
+			System.out.println("Value of staying straight: " + valueFunc(simStraight()));*/
 			
-			//if moving right gets you closest to the dot then move right
-			if(getDistToDot(simRightMove()) <= getDistToDot(simLeftMove()) && getDistToDot(simRightMove()) <= getDistToDot(simStraight()))
-				moveRight();
-			//if moving left gets you closest to the dot then move left
-			else if(getDistToDot(simLeftMove()) <= getDistToDot(simRightMove()) && getDistToDot(simLeftMove()) <= getDistToDot(simStraight()))
-				moveLeft();
-			//otherwise just keep going straight
-			else
+			rightValue = valueFunc(simRightMove());
+			leftValue = valueFunc(simLeftMove());
+			straightValue = valueFunc(simStraight());
+			
+			if(straightValue >= rightValue && straightValue >= leftValue){
+				//System.out.println("straight");
+				lastMove = "straight";
+				nextP = simStraight();
 				stayStraight();
+			}
+			else if(rightValue >= leftValue && rightValue >= straightValue){
+				//System.out.println("right");
+				lastMove = "right";
+				nextP = simRightMove();
+				moveRight();
+			}
+			else{
+				//System.out.println("left");
+				lastMove = "left";
+				nextP = simLeftMove();
+				moveLeft();
+			}
 		}
+		System.out.println("I made my decision at " + pointString(atP) + " heading " + lastDir);
+		System.out.println("Snake died at" + pointString(gp.getSnekHeadLoc()));
+		System.out.println("I expected to be at" + pointString(nextP));
+		System.out.println("Last Move: " + lastMove);
+		System.out.println("Right Value: " + rightValue);
+		System.out.println("Left Value: " + leftValue);
+		System.out.println("Straight Value: " + straightValue);
 	}
 
 	//manhattan distance
@@ -52,7 +84,7 @@ public class SnakeBot {
 	
 	//from the POV of the snake head
 	public void moveLeft(){
-		System.out.println("moving left");
+		//System.out.println("moving left");
 		int dir = gp.getDirection();
 		if(dir == UP)
 			bot.keyPress(KeyEvent.VK_LEFT);
@@ -66,7 +98,7 @@ public class SnakeBot {
 	
 	//from the POV of the snake head
 	public void moveRight(){
-		System.out.println("moving right");
+		//System.out.println("moving right");
 		int dir = gp.getDirection();
 		if(dir == UP)
 			bot.keyPress(KeyEvent.VK_RIGHT);
@@ -80,7 +112,7 @@ public class SnakeBot {
 	
 	//from the POV of the snake head
 	public void stayStraight(){
-		System.out.println("Staying straight");
+		//System.out.println("Staying straight");
 		int dir = gp.getDirection();
 		if(dir == UP)
 			bot.keyPress(KeyEvent.VK_UP);
@@ -132,9 +164,9 @@ public class SnakeBot {
 		int dir = gp.getDirection();
 		Point p = gp.getSnekHeadLoc();
 		if(dir == UP)
-			p.setLocation(p.getX(), p.getY()+10);
-		else if(dir == DOWN)
 			p.setLocation(p.getX(), p.getY()-10);
+		else if(dir == DOWN)
+			p.setLocation(p.getX(), p.getY()+10);
 		else if(dir == LEFT)
 			p.setLocation(p.getX()-10, p.getY());
 		else if(dir == RIGHT)
@@ -142,7 +174,18 @@ public class SnakeBot {
 		return p;
 	}
 	
-	public void printPoint(Point p){
-		System.out.println("(" + p.getX() + ", " + p.getY() + ")");
+	public double valueFunc(Point p){
+		if(gp.isSnekPoint(p))
+			return -20000;
+		if(p.equals(gp.getFoodDotLoc()))
+			return 1000;
+		else if(p.getX() < 40 || p.getX() > 530 || p.getY() < 40 || p.getY() > 530)
+			return -1000000;
+		//TODO find a way to make it detect when the snake hits itself
+		return -getDistToDot(p);
+	}
+	
+	public String pointString(Point p){
+		return "(" + p.getX() + ", " + p.getY() + ")";
 	}
 }

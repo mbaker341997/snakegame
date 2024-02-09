@@ -43,10 +43,10 @@ public class GamePanel extends JPanel {
 	// initial settings
 	public void setup() {
 		// snake start position
-		this.xpos = 290;
-		this.ypos = 290;
-		this.snek = new Snake(xpos, ypos);
-		this.dot = new FoodDot(xpos + 50, ypos);
+		this.xpos = 100;
+		this.ypos = 50;
+		this.snek = new Snake(this.xpos, this.ypos);
+		this.dot = new FoodDot(40, 250);
 		this.direction = Direction.UP;
 		this.makingMove = false;
 				
@@ -118,8 +118,7 @@ public class GamePanel extends JPanel {
 	}
 
 	public void move(Direction newDirection) {
-		if (!Direction.NO_OP_SET.get(this.direction).contains(newDirection)
-				|| this.snek.getTail().isEmpty()) {
+		if (!Direction.NO_OP_SET.get(this.direction).contains(newDirection)) {
 			this.direction = newDirection;
 			this.makingMove = true;
 		}
@@ -181,32 +180,40 @@ public class GamePanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			//change snake's makeup
-			GamePanel.this.snek.addToTail(GamePanel.this.xpos, GamePanel.this.ypos);
-
-			// TODO: make a constants file for game dimensions
-			if (GamePanel.this.ypos > 40 && GamePanel.this.ypos < 530
-					&& GamePanel.this.xpos > 40 && GamePanel.this.xpos < 530
-					&& DIRECTION_TO_DELTA_MAP.containsKey(GamePanel.this.direction)
-			) {
-				int[] delta = DIRECTION_TO_DELTA_MAP.get(GamePanel.this.direction);
-				GamePanel.this.xpos += delta[0];
-				GamePanel.this.ypos += delta[1];
-			}
-
-			GamePanel.this.snek.setCoords(GamePanel.this.xpos, GamePanel.this.ypos);
-			
-			if (GamePanel.this.snek.touchedSelf()) {
+			if (GamePanel.this.xpos < 40 || GamePanel.this.xpos >= 530
+					|| GamePanel.this.ypos < 40 || GamePanel.this.ypos >= 530) {
 				GamePanel.this.gameOver = true;
 				GamePanel.this.timer.stop();
-			}
-
-			// if the snake has eaten, then move the dot and don't chop off end
-			if (hasEaten()) {
-				GamePanel.this.score++;
-				GamePanel.this.dot.changePos(GamePanel.this.snek.getTail());
 			} else {
-				GamePanel.this.snek.chopOffEnd();
+
+				//change snake's makeup
+				GamePanel.this.snek.addToTail(GamePanel.this.xpos, GamePanel.this.ypos);
+
+				// TODO: make a constants file for game dimensions
+				if (GamePanel.this.ypos >= 40 && GamePanel.this.ypos < 530
+						&& GamePanel.this.xpos >= 40 && GamePanel.this.xpos < 530
+						&& DIRECTION_TO_DELTA_MAP.containsKey(GamePanel.this.direction)
+				) {
+					int[] delta = DIRECTION_TO_DELTA_MAP.get(GamePanel.this.direction);
+					GamePanel.this.xpos += delta[0];
+					GamePanel.this.ypos += delta[1];
+				}
+
+				GamePanel.this.snek.setCoords(GamePanel.this.xpos, GamePanel.this.ypos);
+
+				// if the snake has eaten, then move the dot and don't chop off end
+				if (hasEaten()) {
+					GamePanel.this.score++;
+					GamePanel.this.dot.changePos(GamePanel.this.snek.getTail());
+				} else {
+					GamePanel.this.snek.chopOffEnd();
+				}
+
+				if (GamePanel.this.snek.touchedSelf()) {
+					System.out.println("touched self");
+					GamePanel.this.gameOver = true;
+					GamePanel.this.timer.stop();
+				}
 			}
 
 			GamePanel.this.makingMove = false;

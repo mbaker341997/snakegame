@@ -31,7 +31,7 @@ public class Snake {
 	
 	//check if it touched itself (hehe)
 	public boolean touchedSelf() {
-		return tail.stream().anyMatch(p -> p.getX() == x && p.getY() == y);
+		return this.tail.stream().anyMatch(p -> p.getX() == this.x && p.getY() == this.y);
 	}
 	
 	public int getX(){

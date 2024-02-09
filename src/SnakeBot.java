@@ -149,7 +149,7 @@ public class SnakeBot {
 	public double valueFunc(Point p) {
 		if (p.equals(this.gp.getFoodDotLoc()))
 			return 10000.0;
-		else if (p.getX() < 40 || p.getX() >= 530 || p.getY() < 40 || p.getY() >= 530)
+		else if (p.getX() < 40 || p.getX() > 530 || p.getY() < 40 || p.getY() > 530)
 			return -10000.0;
 		// TODO: this contains can be more efficient
 		if (this.gp.isSnekPoint(p))

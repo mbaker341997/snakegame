@@ -43,10 +43,10 @@ public class GamePanel extends JPanel {
 	// initial settings
 	public void setup() {
 		// snake start position
-		this.xpos = 100;
-		this.ypos = 50;
+		this.xpos = 290;
+		this.ypos = 290;
 		this.snek = new Snake(this.xpos, this.ypos);
-		this.dot = new FoodDot(40, 250);
+		this.dot = new FoodDot(this.xpos+50, 290);
 		this.direction = Direction.UP;
 		this.makingMove = false;
 				
@@ -180,8 +180,8 @@ public class GamePanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			if (GamePanel.this.xpos < 40 || GamePanel.this.xpos >= 530
-					|| GamePanel.this.ypos < 40 || GamePanel.this.ypos >= 530) {
+			if (GamePanel.this.xpos < 40 || GamePanel.this.xpos > 530
+					|| GamePanel.this.ypos < 40 || GamePanel.this.ypos > 530) {
 				GamePanel.this.gameOver = true;
 				GamePanel.this.timer.stop();
 			} else {
@@ -190,8 +190,8 @@ public class GamePanel extends JPanel {
 				GamePanel.this.snek.addToTail(GamePanel.this.xpos, GamePanel.this.ypos);
 
 				// TODO: make a constants file for game dimensions
-				if (GamePanel.this.ypos >= 40 && GamePanel.this.ypos < 530
-						&& GamePanel.this.xpos >= 40 && GamePanel.this.xpos < 530
+				if (GamePanel.this.ypos >= 40 && GamePanel.this.ypos <= 530
+						&& GamePanel.this.xpos >= 40 && GamePanel.this.xpos <= 530
 						&& DIRECTION_TO_DELTA_MAP.containsKey(GamePanel.this.direction)
 				) {
 					int[] delta = DIRECTION_TO_DELTA_MAP.get(GamePanel.this.direction);
@@ -210,7 +210,6 @@ public class GamePanel extends JPanel {
 				}
 
 				if (GamePanel.this.snek.touchedSelf()) {
-					System.out.println("touched self");
 					GamePanel.this.gameOver = true;
 					GamePanel.this.timer.stop();
 				}

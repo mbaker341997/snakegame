@@ -45,11 +45,7 @@ public class Snake {
 	public List<Point> getTail(){
 		return tail;
 	}
-	
-	public int getTailLength(){
-		return tail.size();
-	}
-	
+
 	public void addToTail(int x, int y){
 		tail.add(new Point(x, y));
 	}

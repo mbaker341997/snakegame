@@ -7,48 +7,42 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-//the JPanel with the game in it.
-@SuppressWarnings("serial")
-public class GamePanel extends JPanel{
+// the JPanel with the game in it.
+public class GamePanel extends JPanel {
 
-	private CanvasPanel canvas;
-	private int score, xpos, ypos;
+  private int score, xpos, ypos;
 	private Snake snek;
 	private FoodDot dot;
 	private boolean gameStart, gameOver, makingMove;
 	private Timer timer;
 	public static final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
 	public int direction;
-	private boolean robotMode;
+	private final boolean robotMode;
 	
 	public GamePanel(int choice) {
 		setup();
 		
-		//check if it's robot mode
-		if(choice == 1)
-			robotMode = true;
-		else
-			robotMode = false;
+		// check if it's robot mode
+    robotMode = choice == 1;
 		
-		//set up the key listener
-		canvas = new CanvasPanel();	
+		// set up the key listener
+    CanvasPanel canvas = new CanvasPanel();
 		addKeyListener(new ArrowListener());
 		setFocusable(true);
 		setFocusTraversalKeysEnabled(false);
 		
-		//put it all together
+		// put it all together
 		setLayout(new BorderLayout());
 		add(canvas, BorderLayout.CENTER);
 	}
 	
-	//initial settings
-	public void setup(){
-		//snake start position
+	// initial settings
+	public void setup() {
+		// snake start position
 		xpos = 290;
 		ypos = 290;
 		snek = new Snake(xpos, ypos);
@@ -56,42 +50,43 @@ public class GamePanel extends JPanel{
 		direction = 0;
 		makingMove = false;
 				
-		//score info
+		// score info
 		score = 0;
 		gameOver = false;
 				
-		//set up timer
+		// set up timer
 		gameStart = false;
 		timer = new Timer(60, new TimerListener());
 	}
 	
-	//panel where everything will show up
+	// panel where everything will show up
 	private class CanvasPanel extends JPanel
 	{
-		public void paintComponent(Graphics page){
+		public void paintComponent(Graphics page) {
 			super.paintComponent(page);
 			setBackground(Color.BLACK);
 			
-			//set score label
+			// set score label
 			page.setFont(new Font(Font.SERIF, Font.BOLD, 25));
 			page.setColor(Color.WHITE);
 			page.drawString("Score: " + score, 40, 30);
 			
-			//robot mode label
-			if(robotMode)
+			// robot mode label
+			if (robotMode) {
 				page.drawString("Robot Mode", 235, 30);
+			}
 			
-			//bounds
+			// bounds
 			page.drawRect(40, 40, 500, 500);
 			
-			//draw the snake
+			// draw the snake
 			snek.draw(page);
 			
-			//draw the dot
+			// draw the dot
 			dot.draw(page);
 			
-			//show it game over if it is
-			if(gameOver){
+			// show it game over if it is
+			if (gameOver) {
 				page.setFont(new Font(Font.SERIF, Font.BOLD, 50));
 				page.setColor(Color.RED);
 				page.drawString("GAME OVER", 145, 250);
@@ -99,21 +94,16 @@ public class GamePanel extends JPanel{
 		}
 	}
 	
-	public boolean hasEaten(){
-		if(dot.getX() == snek.getX() && dot.getY() == snek.getY())
-			return true;
-		else
-			return false;
+	public boolean hasEaten() {
+    return dot.getX() == snek.getX() && dot.getY() == snek.getY();
 	}
 	
-	public Point getFoodDotLoc(){
-		Point p = new Point(dot.getX(), dot.getY());
-		return p;
+	public Point getFoodDotLoc() {
+    return new Point(dot.getX(), dot.getY());
 	}
 	
-	public Point getSnekHeadLoc(){
-		Point p = new Point(xpos, ypos);
-		return p;
+	public Point getSnekHeadLoc() {
+    return new Point(xpos, ypos);
 	}
 	
 	public int getDirection(){
@@ -124,46 +114,53 @@ public class GamePanel extends JPanel{
 		return gameOver;
 	}
 	
-	public boolean isSnekPoint(Point p){
-		ArrayList<Point> snekPoints = snek.getTail();
-		return snekPoints.contains(p);
+	public boolean isSnekPoint(Point p) {
+		return snek.getTail().contains(p);
 	}
 	
 	private class ArrowListener implements KeyListener{
 
 		@Override
 		public void keyPressed(KeyEvent key) {			
-			if(!gameOver && !makingMove){	
-				//change the snake's direction
-				if(key.getKeyCode() == KeyEvent.VK_UP && ((direction != DOWN && direction != UP)|| snek.getTailLength() == 0)){	
+			if (!gameOver && !makingMove) {
+				// change the snake's direction
+				if( key.getKeyCode() == KeyEvent.VK_UP
+						&& ((direction != DOWN && direction != UP)
+						|| snek.getTailLength() == 0)) {
 					//System.out.println("up");
 					direction = UP;
 					makingMove = true;
 				}
-				else if(key.getKeyCode() == KeyEvent.VK_DOWN && ((direction != DOWN && direction != UP) || snek.getTailLength() == 0)){
+				else if (key.getKeyCode() == KeyEvent.VK_DOWN
+						&& ((direction != DOWN && direction != UP)
+						|| snek.getTailLength() == 0)) {
 					//System.out.println("down");
 					direction = DOWN;
 					makingMove = true;
 				}
-				else if(key.getKeyCode() == KeyEvent.VK_LEFT && ((direction != RIGHT && direction != LEFT) || snek.getTailLength() == 0)){
+				else if (key.getKeyCode() == KeyEvent.VK_LEFT
+						&& ((direction != RIGHT && direction != LEFT)
+						|| snek.getTailLength() == 0)) {
 					//System.out.println("left");
 					direction = LEFT;
 					makingMove = true;
 				}
-				else if(key.getKeyCode() == KeyEvent.VK_RIGHT && ((direction != RIGHT && direction != LEFT) || snek.getTailLength() == 0)){
+				else if (key.getKeyCode() == KeyEvent.VK_RIGHT
+						&& ((direction != RIGHT && direction != LEFT)
+						|| snek.getTailLength() == 0)) {
 					//System.out.println("right");
 					direction = RIGHT;
 					makingMove = true;
 				}
 				
-				//start the timer if the game has begun yet
+				// start the timer if the game has begun yet
 				if(!gameStart){
 					gameStart = true;
 					timer.start();
 				}			
 			}
-			//if the game's over and you press space, restart
-			else if(key.getKeyCode() == KeyEvent.VK_SPACE){
+			// if the game's over and you press space, restart
+			else if (key.getKeyCode() == KeyEvent.VK_SPACE) {
 				setup();				
 				repaint();
 			}
@@ -191,42 +188,35 @@ public class GamePanel extends JPanel{
 			snek.addToTail(xpos, ypos);	
 			
 			//move the snake
-			if(direction == UP){					
-				if(ypos > 40)
-					ypos-=10;
+			if (direction == UP && ypos > 40) {
+				ypos-=10;
 			}
-			else if(direction == DOWN){
-				if(ypos < 530)
-					ypos+=10;
+			else if (direction == DOWN && ypos < 530) {
+				ypos+=10;
 			}
-			else if(direction == LEFT){
-				if(xpos > 40)
-					xpos-=10;
+			else if (direction == LEFT && xpos > 40) {
+				xpos-=10;
 			}
-			else if(direction == RIGHT){
-				if(xpos < 530)
-					xpos+=10;
+			else if (direction == RIGHT && xpos < 530) {
+				xpos+=10;
 			}
 			snek.setCoords(xpos, ypos);
 			
-			if(snek.touchedSelf())
+			if (snek.touchedSelf()) {
 				gameOver = true;
-			
-			//if the snake has eaten, then move the dot and don't chop off end
-			if(hasEaten()){
-				score++;
-				dot.changePos(xpos, ypos, snek.getTail());
-			}
-			else
-				snek.chopOffEnd();
-
-			//stop the timer if gameOver
-			if(gameOver)
 				timer.stop();
-			
-			
+			}
+
+			// if the snake has eaten, then move the dot and don't chop off end
+			if (hasEaten()) {
+				score++;
+				dot.changePos(snek.getTail());
+			} else {
+				snek.chopOffEnd();
+			}
+
+
 			makingMove = false;
-			//repaint 
 			repaint();
 		}
 	

@@ -19,7 +19,14 @@ public class SnakeGame {
 		//choose to play with robot or not 
 		//JOptionPane.showConfirmDialog(window,"Do you want to play or have the robot play?", "SnakeGame", JOptionPane.YES_NO_OPTION);
 		Object[] options = {"I want to play!", "Make the robot play"};
-		int choice = JOptionPane.showOptionDialog(window, "Do you want to play or make the robot play?", "SnakeGame", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+		int choice = JOptionPane.showOptionDialog(window,
+				"Do you want to play or make the robot play?",
+				"SnakeGame",
+				JOptionPane.DEFAULT_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,
+				options[0]);
 		System.out.println(choice);
 		
 		//add the goddamn GamePanel
@@ -27,7 +34,7 @@ public class SnakeGame {
 		window.add(gp);
 		window.setVisible(true);
 		
-		if(choice == 1){
+		if (choice == 1) {
 			SnakeBot bot = new SnakeBot(gp);
 			try {
 				Thread.sleep(1000);

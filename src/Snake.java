@@ -2,51 +2,47 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.List;
 
 //the actual Snake Object
 public class Snake {
-
-	private int x, y;
-	private ArrayList<Point> tail;
+	private int x;
+	private int y;
+	private final List<Point> tail;
+	private static final int SQUARE_SIDE = 10;
 	
 	public Snake(int x, int y) {
 		this.x = x;
 		this.y = y;
-		tail = new ArrayList<Point>();
+		tail = new ArrayList<>();
 	}
 	
 	public void setCoords(int xpos, int ypos){
-		x = xpos;
-		y = ypos;
+		this.x = xpos;
+		this.y = ypos;
 	}
 	
 	//draw method draws the snake
 	public void draw(Graphics page){
 		page.setColor(Color.WHITE);
-		page.fillRect(x, y, 10, 10);
-		for(int i = 0; i < tail.size(); i++){
-			page.fillRect(tail.get(i).x, tail.get(i).y, 10, 10);
-		}
+		page.fillRect(this.x, this.y, SQUARE_SIDE, SQUARE_SIDE);
+		tail.forEach(point -> page.fillRect(point.x, point.y, SQUARE_SIDE, SQUARE_SIDE));
 	}
 	
 	//check if it touched itself (hehe)
-	public boolean touchedSelf(){
-		for(Point p : tail){
-			if(p.getX() == x && p.getY() == y)
-				return true;
-		}
-		return false;
+	public boolean touchedSelf() {
+		return tail.stream().anyMatch(p -> p.getX() == x && p.getY() == y);
 	}
 	
 	public int getX(){
-		return x;
+		return this.x;
 	}
 	
 	public int getY(){
-		return y;
+		return this.y;
 	}
 	
-	public ArrayList<Point> getTail(){
+	public List<Point> getTail(){
 		return tail;
 	}
 	
@@ -59,7 +55,7 @@ public class Snake {
 	}
 	
 	public void chopOffEnd(){
-		tail.remove(0);
+		tail.removeFirst();
 	}
 
 }

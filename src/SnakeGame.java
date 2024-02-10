@@ -27,11 +27,15 @@ public class SnakeGame {
 				options,
 				options[0]);
 		System.out.println(choice);
-		
-		// add the GamePanel
-		GameOuterPanel gameOuterPanel = new GameOuterPanel(choice == 1);
-		window.add(gameOuterPanel);
-		window.setVisible(true);
+		if (choice == -1) {
+			System.exit(0);
+		} else {
+			// add the GamePanel
+			GameOuterPanel gameOuterPanel = new GameOuterPanel(choice == 1);
+			window.add(gameOuterPanel);
+			window.setVisible(true);
+		}
+
 	}
 
 }

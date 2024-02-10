@@ -12,11 +12,8 @@ public class GameInnerPanel extends JPanel {
   private final Timer timer;
 
   // Major game objects
-  private Snake snake;
-  // TODO: could I just move these inside of snake?
-  private int headX;
-  private int headY;
-  private FoodDot dot;
+  private final Snake snake;
+  private final FoodDot dot;
   private final SnakeBot snakeBot;
 
   // Game status
@@ -39,8 +36,8 @@ public class GameInnerPanel extends JPanel {
     this.timer = new Timer(60, new TimerListener());
 
     this.setDefaultConfigParams();
-    this.snake = new Snake(this.headX, this.headY);
-    this.dot = new FoodDot(START_DOT_X, this.headY);
+    this.snake = new Snake(DEFAULT_X, DEFAULT_Y);
+    this.dot = new FoodDot(START_DOT_X, DEFAULT_Y);
     this.snakeBot = new SnakeBot();
   }
 
@@ -50,9 +47,6 @@ public class GameInnerPanel extends JPanel {
     this.gameOver = false;
     this.direction = Direction.RIGHT;
     this.makingMove = false;
-
-    this.headX = DEFAULT_X;
-    this.headY = DEFAULT_Y;
   }
 
   public void reset() {
@@ -60,8 +54,8 @@ public class GameInnerPanel extends JPanel {
     this.dot.setX(START_DOT_X);
     this.dot.setY(DEFAULT_Y);
 
-    this.snake.setX(this.headX);
-    this.snake.setY(this.headY);
+    this.snake.setX(DEFAULT_X);
+    this.snake.setY(DEFAULT_Y);
     this.snake.resetTail();
     this.timer.stop();
     this.repaint();
@@ -94,19 +88,19 @@ public class GameInnerPanel extends JPanel {
   }
 
   public void timerAction() {
-    if (this.headX < MIN_X || this.headX > MAX_X
-        || this.headY < MIN_Y || this.headY > MAX_Y) {
+    if (this.snake.getX() < MIN_X || this.snake.getX() > MAX_X
+        || this.snake.getY() < MIN_Y || this.snake.getY() > MAX_Y) {
       this.gameOver = true;
     } else {
-      this.snake.addToTail(this.headX, this.headY);
+      this.snake.addToTail(this.snake.getX(), this.snake.getY());
 
       if (Direction.DELTA_MAP.containsKey(this.direction)) {
         int[] delta = Direction.DELTA_MAP.get(this.direction);
-        this.headX += delta[0];
-        this.headY += delta[1];
+        this.snake.setCoords(
+            this.snake.getX() + delta[0],
+            this.snake.getY() + delta[1]
+        );
       }
-
-      this.snake.setCoords(this.headX, this.headY);
 
       if (this.hasEaten()) {
         this.score++;

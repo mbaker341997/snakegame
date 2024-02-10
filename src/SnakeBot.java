@@ -2,10 +2,10 @@ import java.awt.Point;
 
 public class SnakeBot {
 
-	private final GamePanel gp;
+	private final GameInnerPanel gameInnerPanel;
 	
-	public SnakeBot(GamePanel gp) {
-		this.gp = gp;
+	public SnakeBot(GameInnerPanel gameInnerPanel) {
+		this.gameInnerPanel = gameInnerPanel;
 	}
 	
 	public void solveGame() {
@@ -17,10 +17,10 @@ public class SnakeBot {
 		double straightValue = 0;
 		String lastMove = "right";
 		Direction lastDir = Direction.UP;
-		gp.startGame();
-		while (!gp.isGameOver()) {
-			atP = gp.getSnekHeadLoc();
-			lastDir = gp.getDirection();
+		this.gameInnerPanel.startGame();
+		while (!this.gameInnerPanel.getGameOver() && this.gameInnerPanel.getGameStarted()) {
+			atP = this.gameInnerPanel.getSnake().getHeadAsPoint();
+			lastDir = this.gameInnerPanel.getDirection();
 			
 			rightValue = valueFunc(simRightMove());
 			leftValue = valueFunc(simLeftMove());
@@ -42,7 +42,8 @@ public class SnakeBot {
 			}
 		}
 		System.out.println("I made my decision at " + pointString(atP) + " heading " + lastDir);
-		System.out.println("Snake died at" + pointString(gp.getSnekHeadLoc()));
+		System.out.println("Snake died at"
+				+ pointString(this.gameInnerPanel.getSnake().getHeadAsPoint()));
 		System.out.println("I expected to be at" + pointString(nextP));
 		System.out.println("Last Move: " + lastMove);
 		System.out.println("Right Value: " + rightValue);
@@ -52,8 +53,8 @@ public class SnakeBot {
 
 	//manhattan distance
 	public double getDistToDot(Point p) {
-		Point foodLoc = this.gp.getFoodDotLoc();
-		return Math.abs(p.getX() - foodLoc.getX()) + Math.abs(p.getY() - foodLoc.getY());
+		FoodDot dot = this.gameInnerPanel.getDot();
+		return Math.abs(p.getX() - dot.getX()) + Math.abs(p.getY() - dot.getY());
 	}
 
 	// TODO: all of these move methods can be refactored
@@ -61,50 +62,50 @@ public class SnakeBot {
 	//from the POV of the snake head
 	public void moveLeft() {
 		//System.out.println("moving left");
-		Direction dir = gp.getDirection();
+		Direction dir = this.gameInnerPanel.getDirection();
 		if (dir == Direction.UP)
-			gp.move(Direction.LEFT);
+			this.gameInnerPanel.move(Direction.LEFT);
 		else if (dir == Direction.DOWN)
-			gp.move(Direction.RIGHT);
+			this.gameInnerPanel.move(Direction.RIGHT);
 		else if (dir == Direction.LEFT)
-			gp.move(Direction.DOWN);
+			this.gameInnerPanel.move(Direction.DOWN);
 		else if (dir == Direction.RIGHT)
-			gp.move(Direction.UP);
+			this.gameInnerPanel.move(Direction.UP);
 	}
 	
 	//from the POV of the snake head
 	public void moveRight() {
 		//System.out.println("moving right");
-		Direction dir = gp.getDirection();
+		Direction dir = this.gameInnerPanel.getDirection();
 		if (dir == Direction.UP)
-			gp.move(Direction.RIGHT);
+			this.gameInnerPanel.move(Direction.RIGHT);
 		else if (dir == Direction.DOWN)
-			gp.move(Direction.LEFT);
+			this.gameInnerPanel.move(Direction.LEFT);
 		else if (dir == Direction.LEFT)
-			gp.move(Direction.UP);
+			this.gameInnerPanel.move(Direction.UP);
 		else if (dir == Direction.RIGHT)
-			gp.move(Direction.DOWN);
+			this.gameInnerPanel.move(Direction.DOWN);
 	}	
 	
 	//from the POV of the snake head
 	public void stayStraight() {
 		//System.out.println("Staying straight");
-		Direction dir = gp.getDirection();
+		Direction dir = this.gameInnerPanel.getDirection();
 		if (dir == Direction.UP)
-			gp.move(Direction.UP);
+			this.gameInnerPanel.move(Direction.UP);
 		else if (dir == Direction.DOWN)
-			gp.move(Direction.DOWN);
+			this.gameInnerPanel.move(Direction.DOWN);
 		else if (dir == Direction.LEFT)
-			gp.move(Direction.LEFT);
+			this.gameInnerPanel.move(Direction.LEFT);
 		else if (dir == Direction.RIGHT)
-			gp.move(Direction.RIGHT);
+			this.gameInnerPanel.move(Direction.RIGHT);
 	}
 	
 	//from the POV of the snake head
 	// TODO: move direction deltas to constants or some utils
 	public Point simLeftMove() {
-		Direction dir = gp.getDirection();
-		Point p = gp.getSnekHeadLoc();
+		Direction dir = this.gameInnerPanel.getDirection();
+		Point p = this.gameInnerPanel.getSnake().getHeadAsPoint();
 		if (dir == Direction.UP)
 			p.setLocation(p.getX()-10, p.getY());
 		else if (dir == Direction.DOWN)
@@ -118,8 +119,8 @@ public class SnakeBot {
 	
 	//from the POV of the snake head
 	public Point simRightMove(){
-		Direction dir = gp.getDirection();
-		Point p = gp.getSnekHeadLoc();
+		Direction dir = this.gameInnerPanel.getDirection();
+		Point p = this.gameInnerPanel.getSnake().getHeadAsPoint();
 		if (dir == Direction.UP)
 			p.setLocation(p.getX()+10, p.getY());
 		else if (dir == Direction.DOWN)
@@ -133,8 +134,8 @@ public class SnakeBot {
 	
 	//from the POV of the snake head
 	public Point simStraight(){
-		Direction dir = gp.getDirection();
-		Point p = gp.getSnekHeadLoc();
+		Direction dir = this.gameInnerPanel.getDirection();
+		Point p = this.gameInnerPanel.getSnake().getHeadAsPoint();
 		if (dir == Direction.UP)
 			p.setLocation(p.getX(), p.getY()-10);
 		else if (dir == Direction.DOWN)
@@ -147,13 +148,14 @@ public class SnakeBot {
 	}
 	
 	public double valueFunc(Point p) {
-		if (p.equals(this.gp.getFoodDotLoc()))
+		FoodDot dot = this.gameInnerPanel.getDot();
+		if (p.getX() == dot.getX() && p.getY() == dot.getY())
 			return 10000.0;
 		else if (p.getX() < 40 || p.getX() > 530 || p.getY() < 40 || p.getY() > 530)
 			return -10000.0;
-		// TODO: this contains can be more efficient
-		if (this.gp.isSnekPoint(p))
+		if (this.gameInnerPanel.getSnake().getTail().contains(p))
 			return -10000.0;
+		// TODO: look ahead more than one step (will i back my head into a corner)?
 		return -getDistToDot(p);
 	}
 	

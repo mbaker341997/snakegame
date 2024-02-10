@@ -14,4 +14,11 @@ public enum Direction {
       Direction.LEFT, Set.of(Direction.LEFT, Direction.RIGHT),
       Direction.RIGHT, Set.of(Direction.LEFT, Direction.RIGHT)
   );
+
+  public static final Map<Direction, int[]> DELTA_MAP = Map.of(
+      Direction.UP, new int[] { 0, -10 },
+      Direction.DOWN, new int[] { 0, 10 },
+      Direction.LEFT, new int[] { -10, 0 },
+      Direction.RIGHT, new int[] { 10, 0 }
+  );
 }

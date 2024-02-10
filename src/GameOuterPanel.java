@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 public class GameOuterPanel extends JPanel {
   private final GameInnerPanel innerPanel;
   private final boolean robotMode;
-  private final SnakeBot snakeBot;
 
   public GameOuterPanel(boolean robotMode) {
     this.robotMode = robotMode;
@@ -19,27 +18,11 @@ public class GameOuterPanel extends JPanel {
     // put it all together
     this.setLayout(new BorderLayout());
     this.add(this.innerPanel, BorderLayout.CENTER);
-
-    this.snakeBot = new SnakeBot(this.innerPanel);
-    if (this.robotMode) {
-      this.triggerSnakeBot();
-    }
+    // TODO: a toggle button on top for switching between modes?
   }
 
-  // TODO: instead of separate game thread, can probably have the robot run in the main game thread
   public void startGame() {
     this.innerPanel.startGame();
-  }
-
-  public void triggerSnakeBot() {
-    new Thread(() -> {
-      try {
-        Thread.sleep(1000);
-        GameOuterPanel.this.snakeBot.solveGame();
-      } catch (InterruptedException e) {
-        System.out.println("The exception: " + e);
-      }
-    }).start();
   }
 
   private class ArrowListener implements KeyListener {
@@ -51,16 +34,17 @@ public class GameOuterPanel extends JPanel {
         KeyEvent.VK_RIGHT, Direction.RIGHT
     );
 
-
     @Override
     public void keyPressed(KeyEvent key) {
       if (key.getKeyCode() == KeyEvent.VK_SPACE) {
         // if the game's over, and you press space, restart
+        boolean gameWasStarted = GameOuterPanel.this.innerPanel.getGameStarted();
         GameOuterPanel.this.innerPanel.reset();
-        if (GameOuterPanel.this.robotMode) {
-          GameOuterPanel.this.triggerSnakeBot();
+        if (GameOuterPanel.this.robotMode && !gameWasStarted) {
+          GameOuterPanel.this.startGame();
         }
-      } else if (GameOuterPanel.this.innerPanel.actionPermitted() && !GameOuterPanel.this.robotMode) {
+      } else if (GameOuterPanel.this.innerPanel.actionPermitted()
+          && !GameOuterPanel.this.robotMode) {
         // start the timer if the game has begun yet
         if (!GameOuterPanel.this.innerPanel.getGameStarted()) {
           GameOuterPanel.this.startGame();

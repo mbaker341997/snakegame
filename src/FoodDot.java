@@ -21,7 +21,7 @@ public class FoodDot {
 			int newY = (new Random().nextInt(53 -4 ) + 4) * 10;
 
 			if (tail.stream().noneMatch(p -> newX == p.getX() && newY == p.getY())
-					|| (newX != this.x || newY != this.y)) {
+					&& (newX != this.x || newY != this.y)) {
 				this.x = newX;
 				this.y = newY;
 				success = true;

@@ -3,7 +3,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -18,6 +17,7 @@ public class GameInnerPanel extends JPanel {
   private int headX;
   private int headY;
   private FoodDot dot;
+  private final SnakeBot snakeBot;
 
   // Game status
   private int score;
@@ -33,12 +33,6 @@ public class GameInnerPanel extends JPanel {
   private static final int MAX_X = 530;
   private static final int MIN_Y = 40;
   private static final int MAX_Y = 530;
-  private static final Map<Direction, int[]> DIRECTION_TO_DELTA_MAP = Map.of(
-      Direction.UP, new int[] { 0, -10 },
-      Direction.DOWN, new int[] { 0, 10 },
-      Direction.LEFT, new int[] { -10, 0 },
-      Direction.RIGHT, new int[] { 10, 0 }
-  );
 
   public GameInnerPanel(boolean robotMode) {
     this.robotMode = robotMode;
@@ -46,7 +40,8 @@ public class GameInnerPanel extends JPanel {
 
     this.setDefaultConfigParams();
     this.snake = new Snake(this.headX, this.headY);
-    this.dot = new FoodDot(this.headX + 50, this.headY);
+    this.dot = new FoodDot(START_DOT_X, this.headY);
+    this.snakeBot = new SnakeBot();
   }
 
   public void setDefaultConfigParams() {
@@ -58,15 +53,12 @@ public class GameInnerPanel extends JPanel {
 
     this.headX = DEFAULT_X;
     this.headY = DEFAULT_Y;
-
-    this.snake = new Snake(this.headX, this.headY);
-    this.dot = new FoodDot(START_DOT_X, DEFAULT_Y);
   }
 
   public void reset() {
     this.setDefaultConfigParams();
     this.dot.setX(START_DOT_X);
-    this.dot.setY(this.headY);
+    this.dot.setY(DEFAULT_Y);
 
     this.snake.setX(this.headX);
     this.snake.setY(this.headY);
@@ -76,8 +68,6 @@ public class GameInnerPanel extends JPanel {
   }
 
   public boolean actionPermitted() {
-    //System.out.println("game over?: " + gameOver);
-    //System.out.println("making move?: " + makingMove);
     return !this.gameOver && !this.makingMove;
   }
 
@@ -85,25 +75,9 @@ public class GameInnerPanel extends JPanel {
     return this.gameStarted;
   }
 
-  public boolean getGameOver() {
-    return this.gameOver;
-  }
-
   public void startGame() {
     this.gameStarted = true;
     this.timer.start();
-  }
-
-  public Direction getDirection() {
-    return this.direction;
-  }
-
-  public FoodDot getDot() {
-    return this.dot;
-  }
-
-  public Snake getSnake() {
-    return this.snake;
   }
 
   public boolean hasEaten() {
@@ -126,8 +100,8 @@ public class GameInnerPanel extends JPanel {
     } else {
       this.snake.addToTail(this.headX, this.headY);
 
-      if (DIRECTION_TO_DELTA_MAP.containsKey(this.direction)) {
-        int[] delta = DIRECTION_TO_DELTA_MAP.get(this.direction);
+      if (Direction.DELTA_MAP.containsKey(this.direction)) {
+        int[] delta = Direction.DELTA_MAP.get(this.direction);
         this.headX += delta[0];
         this.headY += delta[1];
       }
@@ -152,6 +126,15 @@ public class GameInnerPanel extends JPanel {
 
     this.makingMove = false;
     this.repaint();
+
+    // if robot mode then make the best direction change here
+    if (this.robotMode) {
+      this.direction = this.snakeBot.determineNextMove(
+          this.snake,
+          this.dot,
+          this.direction
+      );
+    }
   }
 
   public void paintComponent(Graphics page) {

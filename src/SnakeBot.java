@@ -1,7 +1,5 @@
 import java.awt.Point;
 import java.util.Map;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 
 public class SnakeBot {
   private static final Map<Direction, Direction> LEFT_MAP = Map.of(

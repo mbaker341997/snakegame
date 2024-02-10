@@ -33,7 +33,7 @@ public class GameInnerPanel extends JPanel {
 
   public GameInnerPanel(boolean robotMode) {
     this.robotMode = robotMode;
-    this.timer = new Timer(60, new TimerListener());
+    this.timer = new Timer(20, new TimerListener());
 
     this.setDefaultConfigParams();
     this.snake = new Snake(DEFAULT_X, DEFAULT_Y);
@@ -87,9 +87,12 @@ public class GameInnerPanel extends JPanel {
     }
   }
 
+  public static boolean isInBounds(int x, int y) {
+    return x >= MIN_X && x <= MAX_X && y >= MIN_Y && y <= MAX_Y;
+  }
+
   public void timerAction() {
-    if (this.snake.getX() < MIN_X || this.snake.getX() > MAX_X
-        || this.snake.getY() < MIN_Y || this.snake.getY() > MAX_Y) {
+    if (!isInBounds(this.snake.getX(), this.snake.getY())) {
       this.gameOver = true;
     } else {
       this.snake.addToTail(this.snake.getX(), this.snake.getY());
